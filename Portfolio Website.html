@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke Reaney | Software Engineer Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Set up custom configuration for a dark, professional theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#6366f1', // Indigo 500
+                        'secondary': '#a5b4fc', // Indigo 300
+                        'dark-bg': '#0f172a', // Slate 900
+                        'card-bg': '#1e293b', // Slate 800
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar styling for aesthetics */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #6366f1; /* Primary color */
+            border-radius: 10px;
+        }
+        body {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-sans antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-dark-bg bg-opacity-95 shadow-lg backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo/Name -->
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-3xl font-extrabold tracking-tight text-primary hover:text-secondary transition duration-300">
+                        L.R.
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8 text-lg">
+                    <a href="#about" class="text-white hover:text-primary transition duration-300 rounded-lg p-2">About</a>
+                    <a href="#skills" class="text-white hover:text-primary transition duration-300 rounded-lg p-2">Skills</a>
+                    <a href="#projects" class="text-white hover:text-primary transition duration-300 rounded-lg p-2">Projects</a>
+                    <a href="#contact" class="text-white hover:text-primary transition duration-300 rounded-lg p-2">Contact</a>
+                </nav>
+
+                <!-- Mobile Menu Button (Hamburger) -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-white hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary transition duration-300" aria-label="Toggle menu">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Initially hidden) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-card-bg shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+                <a href="#about" class="text-white hover:bg-primary hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-center">About</a>
+                <a href="#skills" class="text-white hover:bg-primary hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-center">Skills</a>
+                <a href="#projects" class="text-white hover:bg-primary hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-center">Projects</a>
+                <a href="#contact" class="text-white hover:bg-primary hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-center">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="py-24 sm:py-32 lg:py-40 bg-dark-bg text-center">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="mb-8">
+                <!-- Placeholder for Profile Image (can be replaced with an actual image URL) -->
+                <img class="inline-block h-32 w-32 rounded-full ring-4 ring-primary object-cover" 
+                     src="https://placehold.co/128x128/6366f1/ffffff?text=LR" 
+                     alt="Profile Picture" 
+                     onerror="this.src='https://placehold.co/128x128/6366f1/ffffff?text=LR'"
+                >
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4">
+                Hi, I'm <span class="text-primary">Luke Reaney</span>
+            </h1>
+            <p class="text-xl sm:text-2xl text-secondary mb-8 font-light">
+                Software Engineering Student | Seeking placement opportunity.
+            </p>
+            <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-10">
+                I am a dedicated Software Engineering Student eager to apply my skills in Python, Java, and web development. I thrive on problem-solving, enjoy new challenges, and maintain a disciplined work ethic to constantly improve.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="#projects" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-primary hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-300 transform hover:scale-105">
+                    View Projects
+                </a>
+                <!-- CORRECTED: Added mailto: to the href attribute -->
+                <a href="mailto:Lukeszns@gmail.com" class="inline-flex items-center px-6 py-3 border-2 border-primary text-base font-medium rounded-xl text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-300 transform hover:scale-105">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 sm:py-24 lg:py-32 bg-card-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">About Me</h2>
+            <div class="max-w-4xl mx-auto text-lg text-gray-300 space-y-6">
+                <p>
+                    I am a highly motivated Software Engineering student currently pursuing a **Foundation Degree in Software Engineering** (accredited by Ulster University) at Belfast Metropolitan College. My passion for technology began at GCSE level and I am now actively seeking a minimum of a 14-week placement opportunity.
+                </p>
+                <p>
+                    I have strong foundational knowledge across the development lifecycle, including object-oriented programming in Java, database design with SQL, and web development using HTML, CSS, and JavaScript. I am also familiar with software testing techniques, from unit testing (MS Test) to automation and functional testing.
+                </p>
+                <p>
+                    Outside of my studies, my role as a Duty Manager/Team Leader at Iceland Foods has equipped me with essential professional skills in team management, problem-solving in high-pressure environments, and working effectively under time constraints. I am a dedicated team player eager to contribute to innovative projects.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 sm:py-24 lg:py-32 bg-dark-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">Technical Skills</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+                <!-- Skill Card 1: Python -->
+                <div class="p-6 bg-card-bg rounded-xl shadow-lg text-center transition duration-300 hover:shadow-primary/50 hover:scale-105 border-b-4 border-primary">
+                    <div class="text-4xl mb-2">🐍</div>
+                    <p class="font-semibold text-lg">Python / Tkinter</p>
+                </div>
+                <!-- Skill Card 2: Java -->
+                <div class="p-6 bg-card-bg rounded-xl shadow-lg text-center transition duration-300 hover:shadow-primary/50 hover:scale-105 border-b-4 border-primary">
+                    <div class="text-4xl mb-2">☕</div>
+                    <p class="font-semibold text-lg">Java / OOP</p>
+                </div>
+                <!-- Skill Card 3: Web Dev -->
+                <div class="p-6 bg-card-bg rounded-xl shadow-lg text-center transition duration-300 hover:shadow-primary/50 hover:scale-105 border-b-4 border-primary">
+                    <div class="text-4xl mb-2">🌐</div>
+                    <p class="font-semibold text-lg">HTML / CSS / JS</p>
+                </div>
+                <!-- Skill Card 4: SQL -->
+                <div class="p-6 bg-card-bg rounded-xl shadow-lg text-center transition duration-300 hover:shadow-primary/50 hover:scale-105 border-b-4 border-primary">
+                    <div class="text-4xl mb-2">💾</div>
+                    <p class="font-semibold text-lg">SQL / Database Design</p>
+                </div>
+                <!-- Skill Card 5: Testing -->
+                <div class="p-6 bg-card-bg rounded-xl shadow-lg text-center transition duration-300 hover:shadow-primary/50 hover:scale-105 border-b-4 border-primary">
+                    <div class="text-4xl mb-2">✅</div>
+                    <p class="font-semibold text-lg">Software Testing</p>
+                </div>
+                <!-- Skill Card 6: Security -->
+                <div class="p-6 bg-card-bg rounded-xl shadow-lg text-center transition duration-300 hover:shadow-primary/50 hover:scale-105 border-b-4 border-primary">
+                    <div class="text-4xl mb-2">🔒</div>
+                    <p class="font-semibold text-lg">Cyber Security</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 sm:py-24 lg:py-32 bg-card-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 text-white">Academic & Personal Projects</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-16">
+                
+                <!-- Project Card 1: Iceland Foods Operating System -->
+                <div class="bg-dark-bg rounded-2xl shadow-xl overflow-hidden transition duration-300 hover:shadow-2xl hover:shadow-primary/40 border border-transparent hover:border-primary/50">
+                    <div class="p-8">
+                        <h3 class="text-3xl font-semibold text-primary mb-3">Iceland Foods Stock System (Mock)</h3>
+                        <p class="text-gray-400 mb-4 text-sm">Python, Tkinter GUI, File I/O, Encryption</p>
+                        <p class="text-gray-300 mb-6">
+                            A Python-based, menu-driven mock system designed for tracking stock levels and inputting related information. Features a **Tkinter GUI** for navigation and uses an encrypted login menu for user access control, with data persistence handled by file storage.
+                        </p>
+                        <ul class="flex flex-wrap gap-2 mb-6">
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">Python</li>
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">Tkinter</li>
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">GUI Development</li>
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">Encryption</li>
+                        </ul>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-primary hover:text-secondary font-medium transition duration-300 flex items-center">
+                                View Demo 
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white font-medium transition duration-300 flex items-center">
+                                GitHub 
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2: Pet Hotel Booking System -->
+                <div class="bg-dark-bg rounded-2xl shadow-xl overflow-hidden transition duration-300 hover:shadow-2xl hover:shadow-primary/40 border border-transparent hover:border-primary/50">
+                    <div class="p-8">
+                        <h3 class="text-3xl font-semibold text-primary mb-3">Pet Hotel Booking System</h3>
+                        <p class="text-gray-400 mb-4 text-sm">Java, Object-Oriented Programming (OOP), GUI</p>
+                        <p class="text-gray-300 mb-6">
+                            A booking system developed in Java using an **Object-Oriented approach**. The system consists of multiple interacting classes to manage bookings for a Pet Hotel, demonstrating proficiency in core OOP principles and Java GUI development.
+                        </p>
+                        <ul class="flex flex-wrap gap-2 mb-6">
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">Java</li>
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">OOP</li>
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">Multi-Class Design</li>
+                            <li class="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">GUI</li>
+                        </ul>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-primary hover:text-secondary font-medium transition duration-300 flex items-center">
+                                View Demo 
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white font-medium transition duration-300 flex items-center">
+                                GitHub 
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="text-center mt-16">
+                <a href="https://github.com/lukereaney-dev" target="_blank" class="inline-flex items-center px-8 py-3 border-2 border-primary text-base font-medium rounded-xl text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-300 transform hover:scale-105">
+                    See All Projects on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 sm:py-24 lg:py-32 bg-dark-bg">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-4 text-white">Let's Connect</h2>
+            <p class="text-lg text-gray-400 mb-10">
+                I'm actively seeking a Software Engineering placement opportunity. Let's discuss how my skills can benefit your team!
+            </p>
+            
+            <div class="space-y-6">
+                <!-- CORRECTED: Changed 'Mailto:' to 'mailto:' for consistency -->
+                <a href="mailto:Lukeszns@gmail.com" class="block w-full px-6 py-4 text-lg font-semibold rounded-xl text-dark-bg bg-primary hover:bg-indigo-600 transition duration-300 shadow-lg transform hover:scale-[1.02]">
+                    <span class="mr-2">📧</span> Lukeszns@gmail.com
+                </a>
+                
+                <a href="https://linkedin.com/in/lukereaney" target="_blank" class="block w-full px-6 py-4 text-lg font-semibold rounded-xl text-white bg-card-bg border border-gray-700 hover:bg-gray-700 transition duration-300 shadow-lg transform hover:scale-[1.02]">
+                    <span class="mr-2">🔗</span> LinkedIn Profile
+                </a>
+                
+                <a href="https://github.com/lukereaney-dev" target="_blank" class="block w-full px-6 py-4 text-lg font-semibold rounded-xl text-white bg-card-bg border border-gray-700 hover:bg-gray-700 transition duration-300 shadow-lg transform hover:scale-[1.02]">
+                    <span class="mr-2">🐙</span> GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-card-bg border-t border-gray-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-400 text-sm">
+                &copy; <span id="current-year"></span> Luke Reaney. Built with Tailwind CSS and passion.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for utility functions -->
+    <script>
+        // Get the current year for the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Hide mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
