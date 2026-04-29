@@ -1,0 +1,2957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luke Studio | Web Design & Development</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080808;
+      --bg2: #0f0f0f;
+      --bg3: #161616;
+      --card: #111111;
+      --border: rgba(255,255,255,0.07);
+      --accent: #D4AF37;
+      --accent2: #B8962E;
+      --text: #f0f0f0;
+      --muted: #888;
+      --radius: 16px;
+      --nav-h: 76px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NOISE TEXTURE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ─── SCROLL BAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      z-index: 100;
+      transition: background 0.4s, backdrop-filter 0.4s, border-bottom 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #080808 !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    .menu-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .menu-btn span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 4rem) 5vw 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+    }
+    .hero-glow-1 {
+      background: rgba(212,175,55,0.08);
+      top: -200px; right: -100px;
+    }
+    .hero-glow-2 {
+      background: rgba(212,175,55,0.08);
+      bottom: -200px; left: -100px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(212,175,55,0.1);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      width: fit-content;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      max-width: 14ch;
+      margin-bottom: 2rem;
+    }
+    .hero-title .italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #080808;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(212,175,55,0.3);
+    }
+
+    .btn-outline {
+      color: var(--text);
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 5rem;
+      flex-wrap: wrap;
+    }
+    .stat-num {
+      font-size: 2.25rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+    .stat-num span { color: var(--accent); }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-weight: 500;
+    }
+
+    /* ─── MARQUEE ─── */
+    .marquee-section {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 3rem;
+      animation: marquee 25s linear infinite;
+      width: max-content;
+    }
+    .marquee-item {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .marquee-item::after {
+      content: '✦';
+      color: var(--accent);
+      font-size: 0.65rem;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 8rem 5vw; position: relative; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .section-label::before {
+      content: '';
+      width: 20px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title .italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    /* ─── SERVICES ─── */
+    #services { background: var(--bg2); }
+
+    .services-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 5rem;
+    }
+
+    .services-desc {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1.05rem;
+      align-self: end;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .service-card {
+      background: var(--card);
+      padding: 2.5rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover { background: #151515; }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: rgba(212,175,55,0.1);
+      border: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .service-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ─── WORK ─── */
+    #work { background: var(--bg); }
+
+    .work-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(212,175,55,0.2);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    }
+
+    .project-card.featured {
+      grid-column: span 2;
+    }
+
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card.featured .project-thumb { aspect-ratio: 21/9; }
+
+    .project-thumb-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Mock browser UI in project cards */
+    .mock-browser {
+      width: 90%;
+      height: 90%;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .mock-bar {
+      height: 28px;
+      background: #222;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .mock-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .mock-body {
+      width: 100%;
+      height: calc(100% - 28px);
+      display: flex;
+    }
+
+    /* Project 1 — Agency site */
+    .p1-body {
+      background: linear-gradient(135deg, #0d0d1a, #1a0d2e);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+    }
+    .p1-h { height: 8px; background: rgba(212,175,55,0.8); border-radius: 4px; width: 60%; }
+    .p1-p { height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; width: 45%; }
+    .p1-btn { height: 18px; width: 80px; background: rgba(212,175,55,0.6); border-radius: 20px; margin-top: 6px; }
+
+    /* Project 2 — Restaurant */
+    .p2-body {
+      background: linear-gradient(135deg, #1a0a00, #2d1500);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px;
+    }
+    .p2-circle { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,140,0,0.5); }
+    .p2-h { height: 7px; background: rgba(255,140,0,0.7); border-radius: 4px; width: 55%; }
+    .p2-g { display: flex; gap: 6px; margin-top: 4px; }
+    .p2-card { width: 28px; height: 28px; background: rgba(255,255,255,0.05); border-radius: 6px; border: 1px solid rgba(255,140,0,0.2); }
+
+    /* Project 3 — Saas */
+    .p3-sidebar { width: 24%; background: rgba(0,0,0,0.3); border-right: 1px solid rgba(255,255,255,0.05); padding: 12px 8px; display: flex; flex-direction: column; gap: 6px; }
+    .p3-link { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+    .p3-link.active { background: rgba(212,175,55,0.6); }
+    .p3-main { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 6px; background: #0f0e0a; }
+    .p3-row { display: flex; gap: 5px; }
+    .p3-box { flex: 1; height: 30px; background: rgba(212,175,55,0.15); border-radius: 6px; border: 1px solid rgba(212,175,55,0.2); }
+    .p3-chart { flex: 1; height: 50px; background: rgba(212,175,55,0.08); border-radius: 6px; border: 1px solid rgba(212,175,55,0.15); position: relative; overflow: hidden; }
+    .p3-line { position: absolute; bottom: 8px; left: 0; right: 0; height: 2px; background: rgba(212,175,55,0.6); clip-path: polygon(0 100%, 15% 30%, 35% 60%, 55% 20%, 75% 50%, 100% 10%, 100% 100%); }
+
+    /* Project 4 — E-commerce */
+    .p4-body {
+      background: linear-gradient(135deg, #0a1520, #0d2035);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 8px;
+    }
+    .p4-nav { display: flex; gap: 8px; align-items: center; }
+    .p4-logo { width: 30px; height: 8px; background: rgba(255,255,255,0.5); border-radius: 3px; }
+    .p4-links { display: flex; gap: 6px; margin-left: auto; }
+    .p4-link { width: 20px; height: 5px; background: rgba(255,255,255,0.15); border-radius: 2px; }
+    .p4-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .p4-item { background: rgba(255,255,255,0.05); border-radius: 5px; padding: 6px; border: 1px solid rgba(255,255,255,0.05); }
+    .p4-img { width: 100%; height: 20px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 4px; }
+    .p4-price { height: 5px; background: rgba(0,200,150,0.5); border-radius: 2px; width: 60%; }
+
+    .project-info { padding: 1.75rem; }
+
+    .project-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .tag.accent {
+      background: rgba(212,175,55,0.1);
+      color: var(--accent);
+      border-color: rgba(212,175,55,0.2);
+    }
+
+    .project-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .project-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      margin-top: 1rem;
+      transition: gap 0.2s;
+    }
+    .project-link:hover { gap: 0.7rem; }
+
+    /* ─── PROCESS ─── */
+    #process { background: var(--bg2); }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .process-step {
+      position: relative;
+    }
+    .process-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: calc(100% + 0.5rem);
+      width: calc(100% - 0.5rem);
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .step-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .step-num::before {
+      content: '';
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-num-circle {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    .step-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── ABOUT ─── */
+    #about {
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-img-wrap {
+      position: relative;
+    }
+
+    .about-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--bg3);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .about-img-inner {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0d1000, #1a1200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-placeholder {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.15));
+      border: 2px solid rgba(212,175,55,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .about-badge {
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      background: var(--accent);
+      color: #080808;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      font-weight: 800;
+      font-size: 0.875rem;
+      text-align: center;
+      line-height: 1.3;
+      box-shadow: 0 20px 60px rgba(212,175,55,0.3);
+    }
+    .about-badge strong { font-size: 2rem; display: block; letter-spacing: -0.05em; }
+
+    .about-text { }
+    .about-body {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .skill-item::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.8rem;
+      width: 20px; height: 20px;
+      background: rgba(212,175,55,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    #testimonials { background: var(--bg2); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .testimonial-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .testimonial-card:hover {
+      border-color: rgba(212,175,55,0.15);
+      transform: translateY(-4px);
+    }
+
+    .stars {
+      color: var(--accent);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 1.25rem;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .author-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+    }
+    .author-name {
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+    .author-role {
+      font-size: 0.775rem;
+      color: var(--muted);
+    }
+
+    /* ─── CTA SECTION ─── */
+    #cta {
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(212,175,55,0.06), rgba(212,175,55,0.06));
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 24px;
+      padding: 6rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -150px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.05);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .cta-box .section-title { max-width: 700px; margin: 1.5rem auto 1rem; }
+    .cta-box p {
+      color: var(--muted);
+      margin-bottom: 3rem;
+      font-size: 1.05rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: var(--bg2);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .contact-info { }
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .contact-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.25rem;
+    }
+    .contact-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .form-group input:not([type="checkbox"]):not([type="radio"]),
+    .form-group select,
+    .form-group textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.875rem 1rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      width: 100%;
+    }
+    .form-group input:not([type="checkbox"]):not([type="radio"]):focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(212,175,55,0.4);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--muted); }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 12px 7px;
+      padding-right: 2.75rem;
+      cursor: pointer;
+    }
+
+    .form-submit {
+      background: var(--accent);
+      color: #080808;
+      border: none;
+      border-radius: 100px;
+      padding: 1rem 2.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: fit-content;
+    }
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(212,175,55,0.3);
+    }
+
+    /* ─── WEBSITE TIER CARDS ─── */
+    .tier-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .tier-card {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.25rem 1.25rem 1.1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .tier-card:hover {
+      border-color: rgba(212,175,55,0.3);
+      background: rgba(212,175,55,0.03);
+    }
+    .tier-card.selected {
+      border-color: var(--accent);
+      background: rgba(212,175,55,0.06);
+    }
+    .tier-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .tier-select-dot {
+      position: absolute;
+      top: 0.85rem; right: 0.85rem;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      background: var(--card);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .tier-card.selected .tier-select-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5l2.5 2.5 5-5' stroke='%23080808' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 9px;
+    }
+    .tier-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+    .tier-name {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1rem;
+      padding-right: 1.5rem;
+    }
+    .tier-card.selected .tier-name { color: var(--accent); }
+    .tier-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.42rem;
+    }
+    .tier-features li {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      line-height: 1.35;
+    }
+    .tier-features li .tf-icon {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 0.72rem;
+      flex-shrink: 0;
+      margin-top: 0.06rem;
+    }
+    .tier-features li.plus-item { color: var(--text); }
+    @media (max-width: 600px) { .tier-cards { grid-template-columns: 1fr; } }
+
+    /* ─── SCRAPER CASE STUDY ─── */
+    .case-study {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--card);
+    }
+    .case-study-top {
+      padding: 1.1rem 1.25rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .case-study-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+    }
+    .case-study-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-top: 0.2rem;
+    }
+    .case-study-client {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+    .case-study-stats {
+      display: flex;
+      gap: 1.25rem;
+      flex-shrink: 0;
+    }
+    .cs-stat {
+      text-align: center;
+    }
+    .cs-stat-num {
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .cs-stat-label {
+      font-size: 0.62rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.2rem;
+    }
+    .case-study-body {
+      padding: 1rem 1.25rem 1.1rem;
+    }
+    .case-study-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .lead-mock {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .lead-mock-bar {
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 0.45rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .lead-mock-bar-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.4);
+    }
+    .lead-mock-bar span {
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .lead-mock-body {
+      padding: 0.85rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .lead-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+    }
+    .lead-row-icon {
+      font-size: 0.75rem;
+      width: 18px;
+      flex-shrink: 0;
+      opacity: 0.7;
+      line-height: 1.4;
+    }
+    .lead-row-key {
+      color: var(--muted);
+      font-weight: 600;
+      width: 70px;
+      flex-shrink: 0;
+    }
+    .lead-row-val {
+      color: var(--text);
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .lead-row-val .highlight { color: var(--accent); }
+    .lead-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.04);
+      margin: 0.1rem 0;
+    }
+    .scraper-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+    }
+    .scraper-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(212,175,55,0.08);
+      color: var(--accent);
+      border: 1px solid rgba(212,175,55,0.18);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── SERVICE DETAIL BLOCKS ─── */
+    .service-detail-block {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+      animation: detail-in 0.32s ease;
+    }
+    .service-detail-block.active { display: flex; }
+    @keyframes detail-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .service-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      padding: 0.75rem 1rem;
+      background: rgba(212,175,55,0.06);
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 8px;
+    }
+    .service-detail-header::before {
+      content: '';
+      width: 16px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+
+    /* ─── CHECK / RADIO ─── */
+    .check-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      padding: 0.2rem 0;
+    }
+    .check-group.two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem 1rem;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: var(--text);
+      font-weight: 500;
+      user-select: none;
+      line-height: 1.3;
+    }
+    .check-item input[type="checkbox"],
+    .check-item input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      background: var(--card);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .check-item input[type="radio"] { border-radius: 50%; }
+    .check-item input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5l2.5 2.5 5-5' stroke='%23080808' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 10px;
+    }
+    .check-item input[type="radio"]:checked {
+      border-color: var(--accent);
+      background: radial-gradient(circle, #080808 35%, var(--accent) 35%);
+    }
+    .check-item:hover input[type="checkbox"],
+    .check-item:hover input[type="radio"] { border-color: rgba(212,175,55,0.45); }
+    @media (max-width: 600px) { .check-group.two-col { grid-template-columns: 1fr; } }
+
+    /* ─── APP EXAMPLE CARDS ─── */
+    .app-example-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    .app-example-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #141414;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+    }
+    .app-example-card:hover {
+      border-color: rgba(212,175,55,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+    .app-example-thumb {
+      width: 100%;
+      aspect-ratio: 16/10;
+      position: relative;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+    .app-example-browser {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .app-example-bar {
+      height: 22px;
+      flex-shrink: 0;
+      background: #222;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 5px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .app-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .app-example-url {
+      font-size: 0.58rem;
+      color: #444;
+      margin-left: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .app-example-viewport {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .app-example-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .app-example-card:hover .app-example-viewport img { transform: scale(1.04); }
+    .app-example-info {
+      padding: 0.65rem 0.85rem 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    .app-example-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .app-example-tags {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-top: 0.35rem;
+    }
+    .app-example-tag {
+      font-size: 0.64rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.15rem 0.5rem;
+    }
+    .app-example-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 0.4rem;
+      transition: gap 0.15s;
+      text-decoration: none;
+    }
+    .app-example-link:hover { gap: 0.45rem; }
+    @media (max-width: 600px) { .app-example-row { grid-template-columns: 1fr; } }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 3rem 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .social-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(212,175,55,0.05);
+    }
+
+    /* ─── LIVE PREVIEW WIDGETS ─── */
+    .preview-browser {
+      position: absolute;
+      inset: 12px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-bar {
+      height: 28px;
+      flex-shrink: 0;
+      background: #222;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .preview-url {
+      flex: 1;
+      font-size: 0.6rem;
+      color: #555;
+      margin-left: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+    }
+    .preview-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-viewport img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover .preview-viewport img { transform: scale(1.03); }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0s; }
+    .stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.1s; }
+    .stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.2s; }
+    .stagger.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.3s; }
+    .stagger.visible > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 0.4s; }
+    .stagger.visible > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 0.5s; }
+
+    /* ─── MOBILE MENU ─── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,8,8,0.97);
+      backdrop-filter: blur(20px);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .mobile-menu.open { transform: none; }
+    .mobile-menu a {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.04em;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--accent); }
+    .mobile-close {
+      position: absolute;
+      top: 24px; right: 5vw;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .menu-btn { display: flex; }
+      .services-header { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card.featured { grid-column: span 1; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .process-step::after { display: none; }
+      #about { grid-template-columns: 1fr; }
+      .about-img-wrap { max-width: 400px; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      #contact { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 5rem 5vw; }
+      .process-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 2rem; }
+    }
+
+    /* ─── CHATBOT ─── */
+    .chat-widget {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    .chat-toggle {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(212,175,55,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .chat-toggle:hover { transform: scale(1.08); box-shadow: 0 12px 44px rgba(212,175,55,0.55); }
+    .chat-icon, .chat-close-icon {
+      position: absolute;
+      font-size: 1.35rem;
+      transition: opacity 0.2s, transform 0.25s;
+    }
+    .chat-close-icon { opacity: 0; transform: rotate(-90deg) scale(0.7); color: #080808; font-size: 1.1rem; font-weight: 700; }
+    .chat-widget.open .chat-icon { opacity: 0; transform: rotate(90deg) scale(0.7); }
+    .chat-widget.open .chat-close-icon { opacity: 1; transform: none; }
+    .chat-notif {
+      position: absolute;
+      top: -3px; right: -3px;
+      width: 19px; height: 19px;
+      background: #ef4444;
+      border-radius: 50%;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .chat-widget.open .chat-notif { opacity: 0; transform: scale(0); pointer-events: none; }
+    .chat-panel {
+      width: 360px;
+      max-height: 530px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.65);
+      transform: translateY(16px) scale(0.94);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.34,1.5,0.64,1), opacity 0.25s;
+      transform-origin: bottom right;
+    }
+    .chat-widget.open .chat-panel { transform: none; opacity: 1; pointer-events: all; }
+    .chat-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .chat-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #080808;
+      font-weight: 900;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-name { font-size: 0.875rem; font-weight: 700; }
+    .chat-status { font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; gap: 0.35rem; margin-top: 2px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; flex-shrink: 0; animation: pulse-dot 2s infinite; }
+    .chat-minimize { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.4rem; line-height: 1; padding: 2px 6px; transition: color 0.2s; }
+    .chat-minimize:hover { color: var(--text); }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 3px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .chat-msg { display: flex; gap: 0.5rem; align-items: flex-end; animation: msg-in 0.28s ease; }
+    .chat-msg.user { flex-direction: row-reverse; }
+    @keyframes msg-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .msg-av {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #080808;
+      font-size: 0.65rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .msg-av.user-av { background: var(--bg3); color: var(--muted); border: 1px solid var(--border); font-size: 0.75rem; }
+    .msg-bubble {
+      max-width: 80%;
+      padding: 0.6rem 0.85rem;
+      border-radius: 16px;
+      font-size: 0.855rem;
+      line-height: 1.55;
+    }
+    .chat-msg.bot .msg-bubble { background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--text); }
+    .chat-msg.user .msg-bubble { background: var(--accent); color: #080808; border-bottom-right-radius: 4px; font-weight: 500; }
+    .typing-wrap { display: flex; gap: 0.5rem; align-items: flex-end; }
+    .typing-bubble { background: var(--card); border: 1px solid var(--border); border-radius: 16px; border-bottom-left-radius: 4px; padding: 0.65rem 0.9rem; display: flex; gap: 4px; align-items: center; }
+    .typing-bubble span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: bounce-dot 1.2s infinite; }
+    .typing-bubble span:nth-child(2) { animation-delay: 0.18s; }
+    .typing-bubble span:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes bounce-dot {
+      0%,60%,100% { transform: none; opacity: 0.35; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+    .chat-qr { display: flex; flex-wrap: wrap; gap: 0.45rem; padding: 0 1.1rem 0.7rem; }
+    .qr-btn {
+      background: rgba(212,175,55,0.07);
+      border: 1px solid rgba(212,175,55,0.28);
+      color: var(--accent);
+      border-radius: 100px;
+      padding: 0.32rem 0.8rem;
+      font-size: 0.77rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .qr-btn:hover { background: rgba(212,175,55,0.16); transform: translateY(-1px); }
+    .chat-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 0.9rem;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.55rem 1rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.855rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-input:focus { border-color: rgba(212,175,55,0.4); }
+    .chat-input::placeholder { color: var(--muted); }
+    .chat-send {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #080808;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      flex-shrink: 0;
+    }
+    .chat-send:hover { transform: scale(1.12); box-shadow: 0 4px 16px rgba(212,175,55,0.45); }
+    @media (max-width: 600px) {
+      .chat-widget { bottom: 1.25rem; right: 1.25rem; }
+      .chat-panel { width: calc(100vw - 2.5rem); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose">✕</button>
+    <a href="#services" onclick="closeMobile()">Services</a>
+    <a href="#work" onclick="closeMobile()">Work</a>
+    <a href="#process" onclick="closeMobile()">Process</a>
+    <a href="#about" onclick="closeMobile()">About</a>
+    <a href="#contact" onclick="closeMobile()" style="color:var(--accent)">Get a Quote</a>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="logo">Luke<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Available for new projects
+    </div>
+
+    <h1 class="hero-title">
+      Websites that<br/>
+      <span class="italic">actually</span><br/>
+      convert.
+    </h1>
+
+    <p class="hero-sub">
+      I build fast, beautiful, and results-driven websites for businesses that want to stand out online — and turn visitors into customers.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">See My Work →</a>
+      <a href="#contact" class="btn-outline">Start a Project</a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">98<span>%</span></div>
+        <div class="stat-label">Client Satisfaction</div>
+      </div>
+      <div>
+        <div class="stat-num">24<span>hr</span></div>
+        <div class="stat-label">Response Time</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-section" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Web Design</span>
+      <span class="marquee-item">React & Next.js</span>
+      <span class="marquee-item">E-Commerce</span>
+      <span class="marquee-item">SEO Optimization</span>
+      <span class="marquee-item">UI/UX Design</span>
+      <span class="marquee-item">Landing Pages</span>
+      <span class="marquee-item">Wordpress</span>
+      <span class="marquee-item">Performance</span>
+      <span class="marquee-item">Webflow</span>
+      <span class="marquee-item">Conversion Rate</span>
+      <!-- duplicated for seamless loop -->
+      <span class="marquee-item">Web Design</span>
+      <span class="marquee-item">React & Next.js</span>
+      <span class="marquee-item">E-Commerce</span>
+      <span class="marquee-item">SEO Optimization</span>
+      <span class="marquee-item">UI/UX Design</span>
+      <span class="marquee-item">Landing Pages</span>
+      <span class="marquee-item">Wordpress</span>
+      <span class="marquee-item">Performance</span>
+      <span class="marquee-item">Webflow</span>
+      <span class="marquee-item">Conversion Rate</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header fade-up">
+      <div>
+        <div class="section-label">What I Do</div>
+        <h2 class="section-title">Services built<br/>for <span class="italic">growth</span></h2>
+      </div>
+      <p class="services-desc">
+        From concept to launch, I handle everything — design, development, and optimization — so your website works as hard as you do.
+      </p>
+    </div>
+
+    <div class="services-grid stagger">
+      <div class="service-card">
+        <div class="service-icon">🌐</div>
+        <div class="service-title">Websites</div>
+        <p class="service-desc">Stunning, fast, and conversion-optimized websites built with modern frameworks — designed to make your brand stand out and turn visitors into customers.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📱</div>
+        <div class="service-title">App Development</div>
+        <p class="service-desc">Custom web and mobile applications built for scale — from MVPs to full-featured platforms, engineered with clean, maintainable code that grows with your business.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🤖</div>
+        <div class="service-title">AI Receptionist</div>
+        <p class="service-desc">Never miss a call, lead, or booking again. We deploy AI receptionists that answer your phone 24/7, handle live website chat, qualify leads, take bookings, and feed everything into your AI dashboard — so you capture every customer, even when you're busy.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">⚙️</div>
+        <div class="service-title">Data Automation</div>
+        <p class="service-desc">Automate repetitive workflows, connect your tools, and turn raw data into actionable insights with custom pipelines, integrations, and real-time dashboards.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="work-header fade-up">
+      <div>
+        <div class="section-label">Portfolio</div>
+        <h2 class="section-title">Selected <span class="italic">work</span></h2>
+      </div>
+      <a href="#contact" class="btn-outline">Start Your Project →</a>
+    </div>
+
+    <div class="projects-grid stagger">
+
+      <!-- New Era Website — Featured -->
+      <div class="project-card featured">
+        <div class="project-thumb">
+          <div class="preview-browser">
+            <div class="preview-bar">
+              <div class="mock-dot" style="background:#ff5f57"></div>
+              <div class="mock-dot" style="background:#febc2e"></div>
+              <div class="mock-dot" style="background:#28c840"></div>
+              <span class="preview-url">lukeszn.github.io/New-Era-Website</span>
+            </div>
+            <div class="preview-viewport">
+              <img src="https://image.thum.io/get/width/1200/crop/630/noanimate/https://lukeszn.github.io/New-Era-Website/" alt="New Era Website preview" loading="lazy" />
+            </div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tags">
+            <span class="tag accent">Featured</span>
+            <span class="tag">Website</span>
+          </div>
+          <div class="project-name">New Era — Brand Website</div>
+          <p class="project-desc">A polished brand website built for New Era, showcasing the identity, story, and offerings with a modern design and smooth experience.</p>
+          <a href="https://lukeszn.github.io/New-Era-Website/" target="_blank" rel="noopener" class="project-link">View Live →</a>
+        </div>
+      </div>
+
+      <!-- New Era App -->
+      <div class="project-card">
+        <div class="project-thumb">
+          <div class="preview-browser">
+            <div class="preview-bar">
+              <div class="mock-dot" style="background:#ff5f57"></div>
+              <div class="mock-dot" style="background:#febc2e"></div>
+              <div class="mock-dot" style="background:#28c840"></div>
+              <span class="preview-url">lukeszn.github.io/New-Era-App</span>
+            </div>
+            <div class="preview-viewport">
+              <img src="https://image.thum.io/get/width/800/crop/500/noanimate/https://lukeszn.github.io/New-Era-App/" alt="New Era App preview" loading="lazy" />
+            </div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tags">
+            <span class="tag">App</span>
+            <span class="tag">New Era</span>
+          </div>
+          <div class="project-name">New Era — Web App</div>
+          <p class="project-desc">A feature-rich web application for the New Era brand, delivering an interactive and seamless user experience across all devices.</p>
+          <a href="https://lukeszn.github.io/New-Era-App/" target="_blank" rel="noopener" class="project-link">View Live →</a>
+        </div>
+      </div>
+
+      <!-- Naomi App -->
+      <div class="project-card">
+        <div class="project-thumb">
+          <div class="preview-browser">
+            <div class="preview-bar">
+              <div class="mock-dot" style="background:#ff5f57"></div>
+              <div class="mock-dot" style="background:#febc2e"></div>
+              <div class="mock-dot" style="background:#28c840"></div>
+              <span class="preview-url">lukeszn.github.io/Naomi-app</span>
+            </div>
+            <div class="preview-viewport">
+              <img src="https://image.thum.io/get/width/800/crop/500/noanimate/https://lukeszn.github.io/Naomi-app/" alt="Naomi App preview" loading="lazy" />
+            </div>
+          </div>
+        </div>
+        <div class="project-info">
+          <div class="project-tags">
+            <span class="tag">App</span>
+            <span class="tag">Web App</span>
+          </div>
+          <div class="project-name">Naomi — Web App</div>
+          <p class="project-desc">A clean, purpose-built web application for Naomi — designed with an intuitive interface and thoughtful UX from the ground up.</p>
+          <a href="https://lukeszn.github.io/Naomi-app/" target="_blank" rel="noopener" class="project-link">View Live →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="fade-up" style="text-align:center;max-width:600px;margin:0 auto 2rem;">
+      <div class="section-label" style="justify-content:center;">How It Works</div>
+      <h2 class="section-title">A clear process,<br/>zero <span class="italic">surprises</span></h2>
+    </div>
+    <div class="process-grid stagger">
+      <div class="process-step">
+        <div class="step-num-circle">01</div>
+        <div class="step-title">Discovery Call</div>
+        <p class="step-desc">We talk about your goals, your audience, your competitors, and what success looks like for you.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num-circle">02</div>
+        <div class="step-title">Strategy & Design</div>
+        <p class="step-desc">I map out the structure and wireframes, then craft high-fidelity designs you'll actually be excited about.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num-circle">03</div>
+        <div class="step-title">Build & Optimize</div>
+        <p class="step-desc">Your site comes to life with clean code, fast load times, SEO foundations, and full mobile responsiveness.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num-circle">04</div>
+        <div class="step-title">Launch & Grow</div>
+        <p class="step-desc">We go live together. Then I stick around for 30 days to ensure everything performs exactly as planned.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-img-wrap fade-up">
+      <div class="about-img">
+        <div class="about-img-inner" style="background:linear-gradient(135deg,#0d1000,#1a1200);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem;">
+          <div style="font-size:4rem;line-height:1;">⚡</div>
+          <div style="text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;letter-spacing:-0.04em;color:var(--text);">Built to Perform</div>
+            <div style="font-size:0.85rem;color:var(--muted);margin-top:0.4rem;line-height:1.5;">Strategy · Speed · Results</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;width:80%;">
+            <div style="height:4px;background:rgba(212,175,55,0.7);border-radius:2px;width:100%;"></div>
+            <div style="height:4px;background:rgba(212,175,55,0.35);border-radius:2px;width:75%;"></div>
+            <div style="height:4px;background:rgba(212,175,55,0.15);border-radius:2px;width:50%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text fade-up">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">The person behind<br/>the <span class="italic">pixels</span></h2>
+      <p class="about-body">
+        I'm Luke — a web designer and developer obsessed with building websites that don't just look great, but <em>perform</em>. I've helped startups, local businesses, and growing brands build their online presence from scratch.
+      </p>
+      <p class="about-body" style="margin-top:-0.5rem;">
+        I believe a website is your hardest-working salesperson. That's why every project I take on is built with strategy, speed, and conversion in mind — not just aesthetics.
+      </p>
+      <div class="skills-grid stagger">
+        <div class="skill-item">React & Next.js</div>
+        <div class="skill-item">Webflow & Framer</div>
+        <div class="skill-item">Shopify Development</div>
+        <div class="skill-item">UI/UX & Figma</div>
+        <div class="skill-item">Technical SEO</div>
+        <div class="skill-item">WordPress</div>
+        <div class="skill-item">Performance Tuning</div>
+        <div class="skill-item">Copywriting</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="fade-up" style="text-align:center;max-width:600px;margin:0 auto 2rem;">
+      <div class="section-label" style="justify-content:center;">Testimonials</div>
+      <h2 class="section-title">What clients<br/><span class="italic">say</span></h2>
+    </div>
+    <div class="testimonials-grid stagger">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Luke built us something we're genuinely proud to show clients. The site looks incredible, loads fast, and has already brought in new enquiries we wouldn't have had before. Couldn't recommend him enough."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👨‍💼</div>
+          <div>
+            <div class="author-name">Daire Toman</div>
+            <div class="author-role">Business Owner</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"From start to finish Luke was professional, responsive and delivered exactly what I asked for — and more. The app works perfectly and my customers love it. An absolute pleasure to work with."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩‍💼</div>
+          <div>
+            <div class="author-name">Naomi Stretton</div>
+            <div class="author-role">Founder</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta" style="padding-top:0;">
+    <div class="cta-box fade-up">
+      <div class="section-label" style="justify-content:center;">Let's Build</div>
+      <h2 class="section-title">Ready to grow<br/><span class="italic">your business?</span></h2>
+      <p>Let's build something great together. I take on a limited number of projects each month — don't miss your spot.</p>
+      <div class="cta-actions">
+        <a href="#contact" class="btn-primary">Book a Free Call →</a>
+        <a href="mailto:lukeszns@gmail.com" class="btn-outline">Email Me Directly</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-info fade-up">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Let's start<br/>your <span class="italic">project</span></h2>
+      <p style="color:var(--muted);line-height:1.7;margin-bottom:3rem;font-size:1.05rem;">
+        Got a project in mind? Fill out the form and I'll get back to you within 24 hours with next steps.
+      </p>
+      <div class="contact-detail">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">lukeszns@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">Available Worldwide · Remote-first</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-icon">⏱</div>
+        <div>
+          <div class="contact-label">Response Time</div>
+          <div class="contact-value">Within 24 hours</div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form fade-up" onsubmit="handleSubmit(event)">
+
+      <!-- SHARED -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="John" required />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Smith" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="john@company.com" required />
+      </div>
+      <div class="form-group">
+        <label>Service</label>
+        <select id="serviceSelect" required onchange="showServiceDetail(this.value)">
+          <option value="" disabled selected>Select a service…</option>
+          <option value="websites">Website Design &amp; Development</option>
+          <option value="app">App Development</option>
+          <option value="ai">AI Receptionist</option>
+          <option value="automation">Data Automation</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <!-- ── WEBSITES ── -->
+      <div class="service-detail-block" id="detail-websites">
+        <div class="service-detail-header">Website Details</div>
+
+        <div class="form-group">
+          <label>What's Included — Select Your Tier</label>
+          <div class="tier-cards">
+
+            <div class="tier-card" onclick="selectTier(this)">
+              <input type="radio" name="website-tier" value="simple" />
+              <div class="tier-select-dot"></div>
+              <div class="tier-eyebrow">Tier 01</div>
+              <div class="tier-name">Simple Website</div>
+              <ul class="tier-features">
+                <li><span class="tf-icon">✓</span> Homepage</li>
+                <li><span class="tf-icon">✓</span> About page</li>
+                <li><span class="tf-icon">✓</span> Services page</li>
+                <li><span class="tf-icon">✓</span> Contact page</li>
+                <li><span class="tf-icon">✓</span> Mobile optimised</li>
+                <li><span class="tf-icon">✓</span> SEO setup</li>
+                <li><span class="tf-icon">✓</span> Hosting &amp; maintenance</li>
+                <li><span class="tf-icon">✓</span> Domain management</li>
+              </ul>
+            </div>
+
+            <div class="tier-card" onclick="selectTier(this)">
+              <input type="radio" name="website-tier" value="complex" />
+              <div class="tier-select-dot"></div>
+              <div class="tier-eyebrow">Tier 02</div>
+              <div class="tier-name">Complex Website</div>
+              <ul class="tier-features">
+                <li><span class="tf-icon">✓</span> Everything in Simple</li>
+                <li class="plus-item"><span class="tf-icon">+</span> Payment processing</li>
+                <li class="plus-item"><span class="tf-icon">+</span> Account creation &amp; database (Firebase)</li>
+                <li class="plus-item"><span class="tf-icon">+</span> Admin views</li>
+                <li class="plus-item"><span class="tf-icon">+</span> Booking system with backend</li>
+                <li class="plus-item"><span class="tf-icon">+</span> Calendar integration</li>
+                <li class="plus-item"><span class="tf-icon">+</span> Bug fixes &amp; ongoing support</li>
+                <li class="plus-item"><span class="tf-icon">+</span> AI support features</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" placeholder="Your business or brand name" />
+        </div>
+        <div class="form-group">
+          <label>Current Website <span style="color:var(--muted);font-weight:400;">(if any)</span></label>
+          <input type="url" placeholder="https://yoursite.com" />
+        </div>
+        <div class="form-group">
+          <label>Website Type</label>
+          <select>
+            <option value="" disabled selected>What kind of site?</option>
+            <option>Brand / Portfolio</option>
+            <option>Service Business</option>
+            <option>E-Commerce / Online Store</option>
+            <option>Landing Page</option>
+            <option>Blog / Content Site</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Pages Needed</label>
+          <div class="check-group two-col">
+            <label class="check-item"><input type="checkbox" value="home" /> Home</label>
+            <label class="check-item"><input type="checkbox" value="about" /> About</label>
+            <label class="check-item"><input type="checkbox" value="services" /> Services</label>
+            <label class="check-item"><input type="checkbox" value="portfolio" /> Portfolio / Work</label>
+            <label class="check-item"><input type="checkbox" value="contact" /> Contact</label>
+            <label class="check-item"><input type="checkbox" value="blog" /> Blog</label>
+            <label class="check-item"><input type="checkbox" value="shop" /> Shop / Products</label>
+            <label class="check-item"><input type="checkbox" value="other-page" /> Other</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Design Style</label>
+          <select>
+            <option value="" disabled selected>Preferred style…</option>
+            <option>Clean &amp; Minimal</option>
+            <option>Bold &amp; Creative</option>
+            <option>Corporate / Professional</option>
+            <option>Modern Tech / Dark</option>
+            <option>Match Existing Brand</option>
+            <option>Open to Suggestions</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Timeline</label>
+            <select>
+              <option value="" disabled selected>When do you need it?</option>
+              <option>ASAP (Rush)</option>
+              <option>Within 2 Weeks</option>
+              <option>Within 1 Month</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Budget</label>
+            <select>
+              <option value="" disabled selected>Select budget…</option>
+              <option>£200 – £500</option>
+              <option>£500 – £1,000</option>
+              <option>£1,000 – £2,000</option>
+              <option>£2,000+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Extra Notes <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+          <textarea placeholder="Brand notes, inspiration sites, goals, anything else…"></textarea>
+        </div>
+      </div>
+
+      <!-- ── APP DEVELOPMENT ── -->
+      <div class="service-detail-block" id="detail-app">
+        <div class="service-detail-header">App Details</div>
+
+        <div class="form-group">
+          <label>Live Examples — Built by Luke</label>
+          <div class="app-example-row">
+
+            <div class="app-example-card">
+              <div class="app-example-thumb">
+                <div class="app-example-browser">
+                  <div class="app-example-bar">
+                    <div class="app-dot" style="background:#ff5f57"></div>
+                    <div class="app-dot" style="background:#febc2e"></div>
+                    <div class="app-dot" style="background:#28c840"></div>
+                    <span class="app-example-url">lukeszn.github.io/New-Era-App</span>
+                  </div>
+                  <div class="app-example-viewport">
+                    <img src="https://image.thum.io/get/width/600/crop/380/noanimate/https://lukeszn.github.io/New-Era-App/" alt="New Era App preview" loading="lazy" />
+                  </div>
+                </div>
+              </div>
+              <div class="app-example-info">
+                <div class="app-example-name">New Era — Web App</div>
+                <div class="app-example-tags">
+                  <span class="app-example-tag">React</span>
+                  <span class="app-example-tag">Web App</span>
+                  <span class="app-example-tag">Dashboard</span>
+                </div>
+                <a href="https://lukeszn.github.io/New-Era-App/" target="_blank" rel="noopener" class="app-example-link">View Live →</a>
+              </div>
+            </div>
+
+            <div class="app-example-card">
+              <div class="app-example-thumb">
+                <div class="app-example-browser">
+                  <div class="app-example-bar">
+                    <div class="app-dot" style="background:#ff5f57"></div>
+                    <div class="app-dot" style="background:#febc2e"></div>
+                    <div class="app-dot" style="background:#28c840"></div>
+                    <span class="app-example-url">lukeszn.github.io/Naomi-app</span>
+                  </div>
+                  <div class="app-example-viewport">
+                    <img src="https://image.thum.io/get/width/600/crop/380/noanimate/https://lukeszn.github.io/Naomi-app/" alt="Naomi App preview" loading="lazy" />
+                  </div>
+                </div>
+              </div>
+              <div class="app-example-info">
+                <div class="app-example-name">Naomi — Web App</div>
+                <div class="app-example-tags">
+                  <span class="app-example-tag">Web App</span>
+                  <span class="app-example-tag">Custom UX</span>
+                  <span class="app-example-tag">Full Stack</span>
+                </div>
+                <a href="https://lukeszn.github.io/Naomi-app/" target="_blank" rel="noopener" class="app-example-link">View Live →</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>App Name / Concept</label>
+          <input type="text" placeholder="What are you building?" />
+        </div>
+        <div class="form-group">
+          <label>Platform</label>
+          <div class="check-group">
+            <label class="check-item"><input type="checkbox" value="web-app" /> Web App (browser-based)</label>
+            <label class="check-item"><input type="checkbox" value="ios" /> iOS Mobile</label>
+            <label class="check-item"><input type="checkbox" value="android" /> Android Mobile</label>
+            <label class="check-item"><input type="checkbox" value="all-platforms" /> All Platforms</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Key Features</label>
+          <textarea placeholder="List the main features (e.g. user login, dashboard, payments, bookings, notifications…)"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Target Users</label>
+          <input type="text" placeholder="Who will use this app?" />
+        </div>
+        <div class="form-group">
+          <label>Do You Have Designs?</label>
+          <div class="check-group">
+            <label class="check-item"><input type="radio" name="app-designs" value="yes" /> Yes — I have Figma / mockups ready</label>
+            <label class="check-item"><input type="radio" name="app-designs" value="rough" /> Rough ideas only — need design help</label>
+            <label class="check-item"><input type="radio" name="app-designs" value="no" /> No — design from scratch please</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Timeline</label>
+            <select>
+              <option value="" disabled selected>When do you need it?</option>
+              <option>Within 1 Month</option>
+              <option>1 – 3 Months</option>
+              <option>3 – 6 Months</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Budget</label>
+            <select>
+              <option value="" disabled selected>Select budget…</option>
+              <option>£500 – £1,000</option>
+              <option>£1,000 – £2,000</option>
+              <option>£2,000 – £5,000</option>
+              <option>£5,000+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AI RECEPTIONIST ── -->
+      <div class="service-detail-block" id="detail-ai">
+        <div class="service-detail-header">AI Receptionist Details</div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" placeholder="Your business name" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Business Hours</label>
+            <input type="text" placeholder="e.g. Mon–Fri 9am–6pm" />
+          </div>
+          <div class="form-group">
+            <label>Business Email</label>
+            <input type="email" placeholder="hello@yourbusiness.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Services You Provide</label>
+          <textarea placeholder="Briefly describe what your business does (e.g. plumbing, dental, legal, coaching…)"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Biggest Problem Right Now</label>
+          <div class="check-group">
+            <label class="check-item"><input type="checkbox" value="missing-calls" /> Missing calls from customers</label>
+            <label class="check-item"><input type="checkbox" value="no-after-hours" /> No service outside business hours</label>
+            <label class="check-item"><input type="checkbox" value="cant-handle-leads" /> Can't handle all inbound leads</label>
+            <label class="check-item"><input type="checkbox" value="slow-response" /> Slow response times losing customers</label>
+            <label class="check-item"><input type="checkbox" value="all-problems" /> All of the above</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What Should the AI Accomplish?</label>
+          <div class="check-group">
+            <label class="check-item"><input type="checkbox" value="answer-calls" /> Answer calls 24/7</label>
+            <label class="check-item"><input type="checkbox" value="website-chat" /> Handle website chat</label>
+            <label class="check-item"><input type="checkbox" value="bookings" /> Take bookings &amp; appointments</label>
+            <label class="check-item"><input type="checkbox" value="qualify-leads" /> Qualify &amp; capture leads</label>
+            <label class="check-item"><input type="checkbox" value="all-goals" /> All of the above</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Investment Level</label>
+          <select>
+            <option value="" disabled selected>Select a plan…</option>
+            <option value="starter">Starter — £97/mo (calls + chat, up to 500 interactions)</option>
+            <option value="growth">Growth — £197/mo (unlimited interactions + bookings)</option>
+            <option value="pro">Professional — £297/mo (full suite + AI dashboard)</option>
+            <option value="custom">Custom / Enterprise — Let's talk</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Contact Method</label>
+          <div class="check-group">
+            <label class="check-item"><input type="radio" name="ai-contact" value="email" onchange="togglePhoneField('ai', this.value)" /> Email</label>
+            <label class="check-item"><input type="radio" name="ai-contact" value="phone" onchange="togglePhoneField('ai', this.value)" /> Phone Call</label>
+            <label class="check-item"><input type="radio" name="ai-contact" value="whatsapp" onchange="togglePhoneField('ai', this.value)" /> WhatsApp</label>
+          </div>
+        </div>
+        <div class="form-group" id="ai-phone-field" style="display:none;">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+44 7700 000000" />
+        </div>
+      </div>
+
+      <!-- ── DATA AUTOMATION ── -->
+      <div class="service-detail-block" id="detail-automation">
+        <div class="service-detail-header">Automation Details</div>
+
+        <!-- FIELDMOTION CASE STUDY -->
+        <div class="case-study">
+          <div class="case-study-top">
+            <div>
+              <div class="case-study-label">Real Example — Built by Luke</div>
+              <div class="case-study-title">AI Lead Scraper &amp; Contact Enrichment</div>
+              <div class="case-study-client">Client: Fieldmotion — Field Service Management Software</div>
+            </div>
+            <div class="case-study-stats">
+              <div class="cs-stat">
+                <div class="cs-stat-num">10k+</div>
+                <div class="cs-stat-label">Entries</div>
+              </div>
+              <div class="cs-stat">
+                <div class="cs-stat-num">6</div>
+                <div class="cs-stat-label">Data Points</div>
+              </div>
+              <div class="cs-stat">
+                <div class="cs-stat-num">100%</div>
+                <div class="cs-stat-label">Automated</div>
+              </div>
+            </div>
+          </div>
+          <div class="case-study-body">
+            <p class="case-study-desc">
+              Built a custom AI-powered scraper for Fieldmotion that searches a proprietary database of over 10,000 company entries and automatically extracts and enriches full lead profiles — phone, email, LinkedIn, website, and address — ready to import into any CRM. Zero manual research required.
+            </p>
+
+            <!-- MOCK OUTPUT CARD -->
+            <div class="lead-mock">
+              <div class="lead-mock-bar">
+                <div class="lead-mock-bar-dot"></div>
+                <span>SCRAPER OUTPUT — Lead #4,217 of 10,000+</span>
+              </div>
+              <div class="lead-mock-body">
+                <div class="lead-row">
+                  <span class="lead-row-icon">🏢</span>
+                  <span class="lead-row-key">Company</span>
+                  <span class="lead-row-val"><span class="highlight">Apex Facilities Ltd</span></span>
+                </div>
+                <div class="lead-row">
+                  <span class="lead-row-icon">👤</span>
+                  <span class="lead-row-key">Contact</span>
+                  <span class="lead-row-val">James Harrington — Operations Director</span>
+                </div>
+                <div class="lead-divider"></div>
+                <div class="lead-row">
+                  <span class="lead-row-icon">📞</span>
+                  <span class="lead-row-key">Phone</span>
+                  <span class="lead-row-val">+44 1632 960 147</span>
+                </div>
+                <div class="lead-row">
+                  <span class="lead-row-icon">📧</span>
+                  <span class="lead-row-key">Email</span>
+                  <span class="lead-row-val">j.harrington@apexfacilities.co.uk</span>
+                </div>
+                <div class="lead-row">
+                  <span class="lead-row-icon">🔗</span>
+                  <span class="lead-row-key">LinkedIn</span>
+                  <span class="lead-row-val">linkedin.com/in/james-harrington-ops</span>
+                </div>
+                <div class="lead-row">
+                  <span class="lead-row-icon">🌐</span>
+                  <span class="lead-row-key">Website</span>
+                  <span class="lead-row-val">apexfacilities.co.uk</span>
+                </div>
+                <div class="lead-row">
+                  <span class="lead-row-icon">📍</span>
+                  <span class="lead-row-key">Address</span>
+                  <span class="lead-row-val">14 Commerce Park, Sheffield, S9 2GN</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="scraper-tags">
+              <span class="scraper-tag">Python</span>
+              <span class="scraper-tag">AI Enrichment</span>
+              <span class="scraper-tag">10,000+ Records</span>
+              <span class="scraper-tag">CRM Ready Export</span>
+              <span class="scraper-tag">Phone &amp; Email</span>
+              <span class="scraper-tag">LinkedIn Lookup</span>
+              <span class="scraper-tag">Address Resolution</span>
+              <span class="scraper-tag">Fully Automated</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Business Name</label>
+          <input type="text" placeholder="Your business name" />
+        </div>
+        <div class="form-group">
+          <label>Tools You Currently Use</label>
+          <textarea placeholder="e.g. Google Sheets, HubSpot, Shopify, Slack, Notion, Airtable…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>What Would You Like to Automate?</label>
+          <textarea placeholder="Describe the process or workflow you want automated…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Main Goals</label>
+          <div class="check-group two-col">
+            <label class="check-item"><input type="checkbox" value="save-time" /> Save time on manual tasks</label>
+            <label class="check-item"><input type="checkbox" value="reduce-errors" /> Reduce human errors</label>
+            <label class="check-item"><input type="checkbox" value="connect-tools" /> Connect existing tools</label>
+            <label class="check-item"><input type="checkbox" value="dashboards" /> Real-time dashboards</label>
+            <label class="check-item"><input type="checkbox" value="reporting" /> Custom reporting</label>
+            <label class="check-item"><input type="checkbox" value="other-goal" /> Other</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data Volume</label>
+            <select>
+              <option value="" disabled selected>Rough volume…</option>
+              <option>Small (under 1k records/day)</option>
+              <option>Medium (1k – 10k/day)</option>
+              <option>Large (10k+/day)</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Budget</label>
+            <select>
+              <option value="" disabled selected>Select budget…</option>
+              <option>£200 – £500</option>
+              <option>£500 – £1,000</option>
+              <option>£1,000 – £2,000</option>
+              <option>Custom / Ongoing</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── OTHER ── -->
+      <div class="service-detail-block" id="detail-other">
+        <div class="service-detail-header">Project Details</div>
+        <div class="form-group">
+          <label>Tell Me About Your Project</label>
+          <textarea placeholder="Describe your project, goals, and any key details…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Budget Range</label>
+          <select>
+            <option value="" disabled selected>Select your budget…</option>
+            <option>£200 – £500</option>
+            <option>£500 – £1,000</option>
+            <option>£1,000 – £2,000</option>
+            <option>£2,000+</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="form-submit">
+        Send Message →
+      </button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-copy">© 2026 Luke Studio. All rights reserved.</div>
+    <ul class="footer-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="social-links">
+      <a href="#" class="social-link" title="Twitter/X">𝕏</a>
+      <a href="#" class="social-link" title="LinkedIn">in</a>
+      <a href="#" class="social-link" title="GitHub">⌥</a>
+      <a href="#" class="social-link" title="Dribbble">◈</a>
+    </div>
+  </footer>
+
+  <!-- CHATBOT WIDGET -->
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-toggle" id="chatToggle" aria-label="Open chat">
+      <span class="chat-icon">💬</span>
+      <span class="chat-close-icon">✕</span>
+      <span class="chat-notif">1</span>
+    </button>
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-avatar">L</div>
+        <div class="chat-header-info">
+          <div class="chat-name">Luke Studio</div>
+          <div class="chat-status"><span class="status-dot"></span>Online — replies instantly</div>
+        </div>
+        <button class="chat-minimize" id="chatMinimize" aria-label="Minimize">−</button>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-qr" id="chatQR"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+        <button class="chat-send" id="chatSend" aria-label="Send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+
+    menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    mobileClose.addEventListener('click', closeMobile);
+    function closeMobile() { mobileMenu.classList.remove('open'); }
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.fade-up, .stagger').forEach(el => observer.observe(el));
+
+    // Form submit
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      btn.textContent = '✓ Message Sent!';
+      btn.style.background = '#28c840';
+      btn.style.pointerEvents = 'none';
+      setTimeout(() => {
+        btn.textContent = 'Send Message →';
+        btn.style.background = '';
+        btn.style.pointerEvents = '';
+        e.target.reset();
+      }, 3000);
+    }
+
+
+    // Service detail forms
+    function showServiceDetail(value) {
+      document.querySelectorAll('.service-detail-block').forEach(b => b.classList.remove('active'));
+      const block = document.getElementById('detail-' + value);
+      if (block) block.classList.add('active');
+    }
+
+    function selectTier(card) {
+      const all = card.closest('.tier-cards').querySelectorAll('.tier-card');
+      all.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+    }
+
+    function togglePhoneField(service, value) {
+      const field = document.getElementById(service + '-phone-field');
+      if (field) field.style.display = (value === 'phone' || value === 'whatsapp') ? 'flex' : 'none';
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // ─── CHATBOT ───
+    (function () {
+      const widget   = document.getElementById('chatWidget');
+      const toggle   = document.getElementById('chatToggle');
+      const msgs     = document.getElementById('chatMessages');
+      const qrArea   = document.getElementById('chatQR');
+      const input    = document.getElementById('chatInput');
+      const sendBtn  = document.getElementById('chatSend');
+      const minBtn   = document.getElementById('chatMinimize');
+      let started    = false;
+
+      const KB = [
+        {
+          keys: ['hello','hi','hey','sup','good morning','good afternoon','good evening','start'],
+          reply: "Hey there! 👋 I'm the Luke Studio assistant.\n\nI can tell you about our services, pricing, timelines, or help you kick off a project. What are you looking for?",
+          qr: ['Services', 'AI Receptionist', 'Pricing', 'Get a Quote']
+        },
+        {
+          keys: ['service','what do you','what can you','what you do','offer','help me with','options'],
+          reply: "Here's what we build:\n\n🌐 **Websites** — Fast, modern sites that convert visitors into customers\n📱 **App Development** — Web & mobile apps built to scale\n🤖 **AI Receptionist** — 24/7 AI that answers calls, chats & books appointments\n⚙️ **Data Automation** — Workflows, pipelines & integrations\n\nWhich one interests you?",
+          qr: ['Websites', 'App Development', 'AI Receptionist', 'Data Automation']
+        },
+        {
+          keys: ['website','web design','landing page','redesign','web development'],
+          reply: "Websites are at the core of what we do 🌐\n\nEvery site we build includes:\n• Custom design tailored to your brand\n• Mobile-first & fully responsive\n• SEO foundations baked in\n• 99+ Lighthouse performance score\n\nWant to get a quote for your site?",
+          qr: ['Get a Quote', 'Pricing', 'Timeline', 'See Projects']
+        },
+        {
+          keys: ['app','mobile app','web app','application','software','build an app'],
+          reply: "App development is one of our strongest areas 📱\n\nFrom MVPs to full-featured platforms, we build with React, Next.js, and modern stacks — clean, scalable code that grows with your business.\n\nGot a project idea?",
+          qr: ['Get a Quote', 'Pricing', 'Timeline', 'See Projects']
+        },
+        {
+          keys: ['ai','artificial intelligence','chatbot','receptionist','ai receptionist','phone','booking','call','never miss','machine learning','smart'],
+          reply: "Our AI Receptionist is a game-changer 🤖\n\nHere's what it does for your business:\n\n📞 **Answers your phone 24/7** — never miss a call from a customer or lead\n💬 **Live website chatbot** — qualifies visitors and captures enquiries instantly\n📅 **Handles bookings** — takes appointments automatically, no back-and-forth\n📊 **AI dashboard** — see every call, chat, and booking in one place\n\nMost businesses lose leads simply because no one picked up. Our AI fixes that completely.",
+          qr: ['Get a Quote', 'Pricing', 'Book a Free Call']
+        },
+        {
+          keys: ['data','automation','workflow','pipeline','integration','connect tools','automate'],
+          reply: "Data Automation is one of our most impactful services ⚙️\n\nWe help you:\n• Automate repetitive tasks\n• Connect your tools (CRM, Sheets, APIs, etc.)\n• Build real-time dashboards\n• Create data pipelines that just run\n\nMore time for work that actually matters. Want to see what we can automate for you?",
+          qr: ['Get a Quote', 'Pricing', 'Contact']
+        },
+        {
+          keys: ['price','pricing','cost','how much','rate','budget','charge','fee'],
+          reply: "Projects start from **£200** and go up to **£2,000** depending on scope and complexity.\n\nEvery project gets a custom quote after a free discovery call — no commitment needed.",
+          qr: ['Book a Free Call', 'Get a Quote', 'Contact Info']
+        },
+        {
+          keys: ['timeline','how long','turnaround','deadline','fast','quick','rush','time'],
+          reply: "Typical timelines:\n\n• Landing page — 3–5 days\n• Full website — 1–3 weeks\n• Web app — 3–8 weeks\n• AI integration — 1–4 weeks\n• Automation setup — 1–2 weeks\n\nNeed something urgent? Just mention it and we'll see what's possible.",
+          qr: ['Get a Quote', 'Book a Free Call']
+        },
+        {
+          keys: ['process','how does it work','steps','what happens','how do you work'],
+          reply: "Every project follows the same clear process:\n\n01 **Discovery** — We talk goals, audience & timeline\n02 **Design** — Wireframes + high-fidelity mockups\n03 **Build** — Clean code, fast, fully tested\n04 **Launch** — Go live + 30 days of support\n\nSimple, transparent, zero surprises.",
+          qr: ['Get a Quote', 'Book a Free Call', 'Pricing']
+        },
+        {
+          keys: ['contact','email','reach','talk','speak','message','get in touch'],
+          reply: "You can reach Luke directly:\n\n📧 lukeszns@gmail.com\n🌍 Available Worldwide · Remote-first\n⏱ Replies within 24 hours\n\nOr scroll down to fill out the contact form for a detailed quote.",
+          qr: ['Book a Free Call', 'Get a Quote']
+        },
+        {
+          keys: ['book','call','meeting','schedule','consultation','free call','discovery'],
+          reply: "A free discovery call is the best first step — no pressure, no commitment.\n\nDrop an email to lukeszns@gmail.com with your availability, or fill out the form below and mention you'd like a call. Back to you within 24 hours 🚀",
+          qr: ['Get a Quote', 'Email Directly']
+        },
+        {
+          keys: ['project','work','portfolio','example','past','case study','previous','show me'],
+          reply: "You can see live projects right in the Work section on this page — the New Era Website, New Era App, and Naomi App are all real deployed projects you can explore now 👆",
+          qr: ['Get a Quote', 'Services', 'Pricing']
+        },
+        {
+          keys: ['about','who are you','who is lukes','experience','background','tell me about'],
+          reply: "Luke is a web designer and developer with 5+ years of experience, obsessed with building things that actually perform — not just look good.\n\nHe's worked with startups, local businesses, and growing brands. Every project is built with strategy, speed, and results in mind.",
+          qr: ['Services', 'See Projects', 'Get a Quote']
+        },
+        {
+          keys: ['thanks','thank you','great','awesome','perfect','nice','cool','love it'],
+          reply: "Happy to help! 😊 Anything else I can answer for you?",
+          qr: ['Services', 'Get a Quote', 'Contact Info']
+        },
+        {
+          keys: ['bye','goodbye','see you','later','done','no thanks','that\'s all'],
+          reply: "Thanks for stopping by! If you ever want to chat about a project, just ping us. Good luck! 👋",
+          qr: []
+        }
+      ];
+
+      function findIntent(text) {
+        const lower = text.toLowerCase();
+        for (const intent of KB) {
+          if (intent.keys.some(k => lower.includes(k))) return intent;
+        }
+        return null;
+      }
+
+      function md(text) {
+        return text
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br/>');
+      }
+
+      function addMsg(text, side) {
+        const wrap = document.createElement('div');
+        wrap.className = `chat-msg ${side}`;
+        const av = document.createElement('div');
+        av.className = 'msg-av' + (side === 'user' ? ' user-av' : '');
+        av.textContent = side === 'user' ? '👤' : 'L';
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        bubble.innerHTML = md(text);
+        wrap.appendChild(av);
+        wrap.appendChild(bubble);
+        msgs.appendChild(wrap);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      function showTyping() {
+        const wrap = document.createElement('div');
+        wrap.className = 'typing-wrap';
+        wrap.id = 'typingRow';
+        const av = document.createElement('div');
+        av.className = 'msg-av';
+        av.textContent = 'L';
+        const bubble = document.createElement('div');
+        bubble.className = 'typing-bubble';
+        bubble.innerHTML = '<span></span><span></span><span></span>';
+        wrap.appendChild(av);
+        wrap.appendChild(bubble);
+        msgs.appendChild(wrap);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      function removeTyping() {
+        const t = document.getElementById('typingRow');
+        if (t) t.remove();
+      }
+
+      function setQR(items) {
+        qrArea.innerHTML = '';
+        items.forEach(label => {
+          const btn = document.createElement('button');
+          btn.className = 'qr-btn';
+          btn.textContent = label;
+          btn.addEventListener('click', () => send(label));
+          qrArea.appendChild(btn);
+        });
+      }
+
+      function botReply(intent) {
+        showTyping();
+        const delay = 650 + Math.min(intent.reply.length * 4, 900);
+        setTimeout(() => {
+          removeTyping();
+          addMsg(intent.reply, 'bot');
+          setQR(intent.qr || []);
+        }, delay);
+      }
+
+      function send(text) {
+        text = text.trim();
+        if (!text) return;
+        qrArea.innerHTML = '';
+        addMsg(text, 'user');
+        input.value = '';
+
+        const lower = text.toLowerCase();
+        if (lower === 'get a quote' || lower === 'contact info' || lower === 'contact') {
+          setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 400);
+        }
+        if (lower === 'book a free call' || lower === 'email directly') {
+          setTimeout(() => { window.location.href = 'mailto:lukeszns@gmail.com'; }, 300);
+        }
+        if (lower === 'see projects') {
+          setTimeout(() => document.getElementById('work').scrollIntoView({ behavior: 'smooth' }), 400);
+        }
+
+        const intent = findIntent(text);
+        if (intent) {
+          botReply(intent);
+        } else {
+          showTyping();
+          setTimeout(() => {
+            removeTyping();
+            addMsg("Hmm, not sure about that one! 🤔 Feel free to reach out directly at lukeszns@gmail.com — Luke will get back to you within 24 hours.", 'bot');
+            setQR(['Services', 'Pricing', 'Get a Quote', 'Contact Info']);
+          }, 800);
+        }
+      }
+
+      toggle.addEventListener('click', () => {
+        const open = widget.classList.toggle('open');
+        if (open && !started) {
+          started = true;
+          setTimeout(() => {
+            addMsg("Hey! 👋 Welcome to Luke Studio.\n\nI can answer questions about services, pricing, timelines, and more. What would you like to know?", 'bot');
+            setQR(['Services', 'AI Receptionist', 'Pricing', 'Get a Quote']);
+          }, 320);
+        }
+      });
+
+      minBtn.addEventListener('click', () => widget.classList.remove('open'));
+      sendBtn.addEventListener('click', () => send(input.value));
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') send(input.value); });
+    })();
+  </script>
+</body>
+</html>
